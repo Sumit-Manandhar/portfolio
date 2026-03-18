@@ -1,752 +1,644 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sumit Manandhar — .NET Developer</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --bg: #0a0a0a;
-    --surface: #111111;
-    --surface2: #1a1a1a;
-    --border: #222222;
-    --accent: #00e5a0;
-    --accent2: #0066ff;
-    --text: #f0f0f0;
-    --muted: #666666;
-    --muted2: #444444;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    overflow-x: hidden;
-    cursor: none;
-  }
-  .cursor {
-    width: 12px; height: 12px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.1s ease;
-    mix-blend-mode: difference;
-  }
-  .cursor-ring {
-    width: 36px; height: 36px;
-    border: 1px solid var(--accent);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9998;
-    opacity: 0.5;
-  }
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 9990; opacity: 0.4;
-  }
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.5rem 4rem;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 1.1rem;
-    letter-spacing: -0.03em;
-    color: var(--text); text-decoration: none;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-  .nav-links a {
-    color: var(--muted); text-decoration: none;
-    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--accent); }
-  .nav-badge {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-size: 0.72rem; color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 0.3rem 0.8rem; border-radius: 100px;
-  }
-  .nav-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--accent); border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visiblo HTML Project</title>
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid; grid-template-columns: 1fr 1fr;
-    align-items: center;
-    padding: 8rem 4rem 4rem;
-    position: relative; overflow: hidden;
-  }
-  .hero-grid-bg {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 60px 60px; opacity: 0.3;
-    mask-image: radial-gradient(ellipse at 60% 50%, black 30%, transparent 70%);
-  }
-  .hero-glow {
-    position: absolute;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(0,229,160,0.08) 0%, transparent 65%);
-    top: 50%; right: -100px; transform: translateY(-50%);
-    pointer-events: none;
-  }
-  .hero-left { position: relative; z-index: 1; }
-  .hero-eyebrow {
-    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 1.5rem;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  .hero-eyebrow::before { content: ''; display: block; width: 40px; height: 1px; background: var(--accent); }
-  .hero-name {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(3rem, 6vw, 5.5rem);
-    font-weight: 800; line-height: 1.0; letter-spacing: -0.04em;
-    margin-bottom: 1rem;
-  }
-  .hero-name em { font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--text); }
-  .hero-title {
-    font-family: 'Instrument Serif', serif;
-    font-size: 1.4rem; font-style: italic;
-    color: var(--muted); margin-bottom: 2rem;
-  }
-  .hero-desc { font-size: 0.85rem; line-height: 1.8; color: var(--muted); max-width: 420px; margin-bottom: 3rem; }
-  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn-primary {
-    background: var(--accent); color: #000;
-    padding: 0.85rem 2rem; border: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.78rem; font-weight: 500;
-    letter-spacing: 0.05em; text-transform: uppercase;
-    text-decoration: none; cursor: none;
-    transition: transform 0.2s, box-shadow 0.2s; display: inline-block;
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,229,160,0.3); }
-  .btn-ghost {
-    background: transparent; color: var(--text);
-    padding: 0.85rem 2rem; border: 1px solid var(--border);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase;
-    text-decoration: none; cursor: none; display: inline-block;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .hero-right { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; }
-  .hero-card { position: relative; width: 340px; }
-  .hero-avatar-wrap {
-    width: 340px; height: 400px;
-    background: var(--surface); border: 1px solid var(--border);
-    position: relative; overflow: hidden;
-  }
-  .hero-avatar-inner {
-    width: 100%; height: 100%;
-    background: linear-gradient(135deg, #111 0%, #1a2a1a 50%, #0a1a0a 100%);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif; font-size: 7rem; font-weight: 800;
-    color: rgba(0,229,160,0.15); letter-spacing: -0.05em; user-select: none;
-  }
-  .hero-avatar-inner::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 40%, rgba(10,10,10,0.8) 100%);
-  }
-  .hero-tag {
-    position: absolute; bottom: -1px; left: -1px; right: -1px;
-    background: var(--surface2); border: 1px solid var(--border);
-    padding: 1.2rem 1.5rem;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .hero-tag-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; }
-  .hero-tag-years { font-size: 0.72rem; color: var(--muted); }
-  .hero-stats {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1px; background: var(--border); margin-top: 1px; border: 1px solid var(--border);
-  }
-  .hero-stat { background: var(--surface2); padding: 1rem 1.2rem; }
-  .hero-stat-num { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--accent); line-height: 1; }
-  .hero-stat-label { font-size: 0.65rem; color: var(--muted); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-  /* MARQUEE */
-  .marquee-section {
-    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    overflow: hidden; padding: 1rem 0; background: var(--surface);
-  }
-  .marquee-track { display: flex; gap: 0; white-space: nowrap; animation: marquee 22s linear infinite; }
-  .marquee-item {
-    display: inline-flex; align-items: center; gap: 1.5rem;
-    padding: 0 2rem; font-size: 0.72rem;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--muted2); flex-shrink: 0;
-  }
-  .marquee-item span { color: var(--accent); font-size: 1rem; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 
-  /* SECTIONS */
-  section { padding: 7rem 4rem; }
-  .section-label {
-    font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 1rem;
-    display: flex; align-items: center; gap: 0.8rem;
-  }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 80px; }
-  .section-title {
-    font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem;
-  }
-  .section-sub { color: var(--muted); font-size: 0.85rem; line-height: 1.7; max-width: 500px; margin-bottom: 4rem; }
+    <!-- Icon CSS -->
+    <link rel="stylesheet" href="icon-fonts/remixicon/remixicon.css">
 
-  /* SKILLS */
-  .skills-section { background: var(--surface); }
-  .skills-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1px; background: var(--border); border: 1px solid var(--border);
-  }
-  .skill-card { background: var(--surface2); padding: 2rem; transition: background 0.2s; }
-  .skill-card:hover { background: #1f1f1f; }
-  .skill-card-icon { font-size: 1.5rem; margin-bottom: 1rem; }
-  .skill-card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.8rem; }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .skill-tag {
-    font-size: 0.65rem; padding: 0.2rem 0.6rem;
-    background: var(--bg); border: 1px solid var(--border);
-    color: var(--muted); letter-spacing: 0.05em;
-  }
-  .skill-tag.accent { border-color: var(--accent); color: var(--accent); }
-
-  /* PROJECTS */
-  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
-  .project-card {
-    background: var(--surface); border: 1px solid var(--border);
-    overflow: hidden; transition: transform 0.3s, border-color 0.3s; position: relative;
-  }
-  .project-card:hover { transform: translateY(-4px); border-color: var(--accent); }
-  .project-img { width: 100%; height: 200px; overflow: hidden; position: relative; }
-  .project-img-inner {
-    width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 4rem; transition: transform 0.4s ease;
-  }
-  .project-card:hover .project-img-inner { transform: scale(1.05); }
-  .proj-bg-1 { background: linear-gradient(135deg, #0d1f3c 0%, #1a3a5c 100%); }
-  .proj-bg-2 { background: linear-gradient(135deg, #1a0d2e 0%, #2d1a4a 100%); }
-  .proj-bg-3 { background: linear-gradient(135deg, #0d2e1a 0%, #1a4a2d 100%); }
-  .proj-bg-4 { background: linear-gradient(135deg, #2e1a0d 0%, #4a2d1a 100%); }
-  .proj-bg-5 { background: linear-gradient(135deg, #0d2e2e 0%, #1a4a4a 100%); }
-  .proj-bg-6 { background: linear-gradient(135deg, #2e0d1a 0%, #4a1a2d 100%); }
-  .project-badge {
-    position: absolute; top: 1rem; right: 1rem;
-    font-size: 0.6rem; padding: 0.25rem 0.6rem;
-    background: rgba(0,229,160,0.15); border: 1px solid var(--accent);
-    color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
-  }
-  .project-body { padding: 1.5rem; }
-  .project-num { font-size: 0.65rem; color: var(--muted2); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-  .project-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem; }
-  .project-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.2rem; }
-  .project-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
-  .stack-pill {
-    font-size: 0.62rem; padding: 0.2rem 0.5rem;
-    background: var(--bg); border: 1px solid var(--muted2); color: var(--muted); letter-spacing: 0.05em;
-  }
-  .project-link {
-    font-size: 0.72rem; color: var(--accent); text-decoration: none;
-    letter-spacing: 0.08em; display: inline-flex; align-items: center; gap: 0.4rem;
-    transition: gap 0.2s;
-  }
-  .project-link:hover { gap: 0.7rem; }
-
-  /* EXPERIENCE */
-  .exp-section { background: var(--surface); }
-  .timeline { position: relative; padding-left: 2rem; }
-  .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border); }
-  .timeline-item { position: relative; margin-bottom: 3rem; padding-left: 2rem; }
-  .timeline-dot {
-    position: absolute; left: -2.4rem; top: 0.4rem;
-    width: 10px; height: 10px; background: var(--accent); border-radius: 50%;
-    box-shadow: 0 0 0 4px rgba(0,229,160,0.1);
-  }
-  .timeline-period { font-size: 0.68rem; color: var(--muted2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
-  .timeline-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.2rem; }
-  .timeline-company { font-size: 0.8rem; color: var(--accent); margin-bottom: 0.8rem; }
-  .timeline-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.8; }
-  .timeline-desc li { margin-bottom: 0.3rem; padding-left: 1rem; position: relative; list-style: none; }
-  .timeline-desc li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
-  .edu-card {
-    display: flex; gap: 2rem; align-items: flex-start;
-    background: var(--surface); border: 1px solid var(--border);
-    padding: 2rem; max-width: 700px;
-  }
-  .edu-icon { font-size: 2.5rem; flex-shrink: 0; }
-  .edu-degree { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.3rem; }
-  .edu-school { font-size: 0.8rem; color: var(--accent); margin-bottom: 0.3rem; }
-  .edu-year { font-size: 0.72rem; color: var(--muted); }
-
-  /* CONTACT */
-  .contact-section { background: var(--bg); border-top: 1px solid var(--border); }
-  .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
-  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-  .form-input, .form-textarea {
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); padding: 0.85rem 1rem;
-    font-family: 'DM Mono', monospace; font-size: 0.82rem;
-    outline: none; transition: border-color 0.2s; resize: none;
-  }
-  .form-input:focus, .form-textarea:focus { border-color: var(--accent); }
-  .form-textarea { height: 120px; }
-  .form-submit {
-    background: var(--accent); color: #000; border: none;
-    padding: 1rem 2rem; font-family: 'DM Mono', monospace;
-    font-size: 0.78rem; font-weight: 500;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    cursor: none; transition: transform 0.2s, box-shadow 0.2s;
-    width: 100%; margin-top: 0.5rem;
-  }
-  .form-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,229,160,0.3); }
-  .contact-info { display: flex; flex-direction: column; gap: 2rem; }
-  .contact-info-title {
-    font-family: 'Instrument Serif', serif; font-style: italic;
-    font-size: 1.3rem; color: var(--muted); line-height: 1.6;
-  }
-  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
-  .contact-link {
-    display: flex; align-items: center; gap: 1rem;
-    text-decoration: none; color: var(--text); font-size: 0.82rem;
-    padding: 1rem 1.2rem; background: var(--surface); border: 1px solid var(--border);
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .contact-link:hover { border-color: var(--accent); color: var(--accent); }
-  .contact-link-icon { font-size: 1.2rem; flex-shrink: 0; }
-  .contact-link-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.1rem; }
-
-  footer {
-    border-top: 1px solid var(--border); padding: 2rem 4rem;
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 0.7rem; color: var(--muted2);
-  }
-  footer span { color: var(--accent); }
-
-  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .fade-up.visible { opacity: 1; transform: translateY(0); }
-
-  @media (max-width: 900px) {
-    nav { padding: 1rem 1.5rem; }
-    .nav-links { display: none; }
-    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; gap: 3rem; }
-    .hero-right { justify-content: flex-start; }
-    .hero-avatar-wrap { width: 280px; height: 320px; }
-    .hero-card { width: 280px; }
-    section { padding: 5rem 1.5rem; }
-    .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
-    .form-row { grid-template-columns: 1fr; }
-    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
-  }
-</style>
+    <!--  CSS files -->
+    <link rel="stylesheet" href="css/swiper.css">
+    <link rel="stylesheet" href="css/magnific.css">
+    <link rel="stylesheet" href="css/colors/citrus-shine.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<nav>
-  <a href="#" class="nav-logo">Sumit<span>.</span></a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="nav-badge">Open to Work</div>
-</nav>
-
-<!-- HERO -->
-<section class="hero" id="about">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-left fade-up">
-    <p class="hero-eyebrow">Full-Stack .NET Developer</p>
-    <h1 class="hero-name">Sumit<br/><em>Manandhar</em></h1>
-    <p class="hero-title">Building robust systems &amp; clean interfaces.</p>
-    <p class="hero-desc">4 years crafting enterprise-grade .NET applications, optimizing databases, and shipping products from dev to production. Based in Kathmandu, Nepal.</p>
-    <div class="hero-ctas">
-      <a href="#projects" class="btn-primary">View Projects →</a>
-      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    <div class="preloader">
+        <div class="percent-display"></div>
+        <div class="loading">Loading...</div>
     </div>
-  </div>
-  <div class="hero-right fade-up" style="transition-delay:0.2s">
-    <div class="hero-card">
-      <div class="hero-avatar-wrap">
-        <div class="hero-avatar-inner">SM</div>
-        <div class="hero-tag">
-          <div>
-            <div class="hero-tag-role">Sumit Manandhar</div>
-            <div class="hero-tag-years">Senior .NET Developer</div>
-          </div>
-          <div style="font-size:1.4rem">🇳🇵</div>
+
+    <main>
+        <div class="wrapper row">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="icon-bar">
+                <a href="#home"><span>home</span><i class="ri-home-3-line"></i></a>
+                <a href="#resume"><span>resume</span><i class="ri-align-center"></i></a>
+                <a href="#services"><span>services</span> <i class="ri-briefcase-2-line"></i></a>
+                <a href="#skills"><span>skills</span> <i class="ri-shapes-line"></i></a>
+                <a href="#portfolio"><span>projects</span> <i class="ri-macbook-line"></i></a>
+                <a href="#comments"><span>testimonials</span><i class="ri-message-2-line"></i></a>
+                <a href="#contact"><span>contact</span> <i class="ri-mail-send-line"></i></a>
+            </div>
+
+            <div class="profile-box-wrap col-12 offset-md-1 col-md-10 offset-lg-0 col-lg-3">
+                <div class="profile-box glass-effect">
+                    <div class="profile-box-inner">
+                        <div class="profile-image">
+                            <img src="img/profile.jpg" alt="profile">
+                        </div>
+                        <div class="profile-info">
+                            <h5 class="mt-1">Sumit Manandhar</h5>
+                            <p class="body-three mt-16">Web Designer &<br>WordPress developer</p>
+                        </div>
+                        <div class="social-links mt-32">
+                            <a href="#"><i class="ri-facebook-fill"></i></a>
+                            <a href="#"><i class="ri-twitter-x-line"></i></a>
+                            <a href="#"><i class="ri-instagram-line"></i></a>
+                            <a href="#"><i class="ri-dribbble-line"></i></a>
+                        </div>
+                        <div class="email-info mt-32">
+                            <a href="mailto:hello@SumitManandhar.com">
+                                <h6>hello@mManandhar.com</h6>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-side  col-12 offset-md-1 col-md-10 offset-lg-4 col-lg-7">
+                <section class="hero-section" id="home">
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>HELLO</span>
+                    </div>
+                    <h1 class="text-anime"><span>Helping Businesses</span> <br><span>Grow Through</span><br><span class="color">Digital Innovation</span> </h1>
+                    <p class="mt-32 text-anime">A Digital Designer and Web Developer based in Los Angeles. I aim is to transform the tricky web flows and overcrowded designs to elegant website solutions!</p>
+                    <div class="buttons-holder fade-up-anime mt-64">
+                        <a class="visiblo-btn-color" href="#"><span>Let's Work Together</span></a>
+                        <a class="visiblo-btn-arrow" href="#"><span>Download Cv</span></a>
+                    </div>
+                </section>
+
+                <!-- About Section -->
+                <section class="about-section" id="about">
+                    <!-- About Badge -->
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>ABOUT</span>
+                    </div>
+                    <!-- Main Title -->
+                    <div class="about-title">
+                        <h2 class="about-title-secondary text-anime"><span>My Journey & </span> <span class="color">Vision</span></h2>
+                    </div>
+
+                    <!-- About Content -->
+                    <div class="about-content mt-32">
+                        <p class="about-paragraph text-anime">Hi, I’m Sumit Manandhar—a creative mind passionate about innovation, storytelling, and design. With a deep love for technology and aesthetics, I strive to bring ideas to life in meaningful and impactful ways. </p>
+                        <br>
+                        <p class="about-paragraph text-anime">
+                            Over the years, I've worked on diverse projects, blending creativity with strategy to craft unique digital experiences. Whether it's through design, writing, or problem-solving, I believe in pushing boundaries and constantly evolving.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Resume Section -->
+                <section class="resume-section" id="resume">
+                    <!-- Resume Badge -->
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>RESUME</span>
+                    </div>
+
+                    <!-- Main Title -->
+                    <div class="main-title">
+                        <h2 class="title-primary text-anime"><span>Creative Thinker</span> <br> <span class="color">Designer, Innovator</span></h2>
+                    </div>
+
+                    <!-- Work Experience Section -->
+                    <div class="work-experience mt-32">
+                        <div class="experience-item fade-up-anime row">
+                            <div class="job-title col-md-4">Freelancer</div>
+                            <div class="company-name col-md-4">GreenSprout Design</div>
+                            <div class="work-dates col-md-4">January 2021 – Present</div>
+                        </div>
+
+                        <div class="experience-divider"></div>
+
+                        <div class="experience-item fade-up-anime row">
+                            <div class="job-title col-md-4">Frontend Developer</div>
+                            <div class="company-name col-md-4">PixelLab Interactive</div>
+                            <div class="work-dates col-md-4">May 2019 – December 2020</div>
+                        </div>
+
+                        <div class="experience-divider"></div>
+
+                        <div class="experience-item fade-up-anime row">
+                            <div class="job-title col-md-4">Graphic Designer</div>
+                            <div class="company-name col-md-4">CreativeWave Agency</div>
+                            <div class="work-dates col-md-4">March 2017 – April 2018</div>
+                        </div>
+
+                        <div class="experience-divider"></div>
+
+                        <div class="experience-item fade-up-anime row">
+                            <div class="job-title col-md-4">UX/UI Designer</div>
+                            <div class="company-name col-md-4">BlueSky Digital Studio</div>
+                            <div class="work-dates col-md-4">June 2018 – August 2020</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Services Section -->
+                <section class="services-section" id="services">
+                    <!-- Services Badge -->
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>SERVICES</span>
+                    </div>
+
+                    <!-- Main Title -->
+                    <div class="services-title">
+                        <h2 class="services-title-primary text-anime"><span>Solutions That</span><br><span class="color">Empower Your Brand</span></h2>
+                    </div>
+
+                    <!-- Services Accordion -->
+                    <div class="services-accordion mt-32">
+                        <div class="accordion-item fade-up-anime">
+                            <div class="accordion-header">
+                                <span class="service-name">Web Design & Development</span>
+                                <span class="accordion-arrow"><i class="ri-arrow-right-down-line"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Custom website design and development solutions tailored to your business needs. From responsive layouts to interactive features.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-divider"></div>
+
+                        <div class="accordion-item fade-up-anime">
+                            <div class="accordion-header">
+                                <span class="service-name">UI/UX Design</span>
+                                <span class="accordion-arrow"><i class="ri-arrow-right-down-line"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>User-centered design approach focusing on creating intuitive and engaging user experiences across all digital platforms.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-divider"></div>
+
+                        <div class="accordion-item fade-up-anime">
+                            <div class="accordion-header">
+                                <span class="service-name">Branding & Identity</span>
+                                <span class="accordion-arrow"><i class="ri-arrow-right-down-line"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Complete brand identity development including logo design, brand guidelines, and visual identity systems.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-divider"></div>
+
+                        <div class="accordion-item fade-up-anime">
+                            <div class="accordion-header">
+                                <span class="service-name">WordPress Solutions</span>
+                                <span class="accordion-arrow"><i class="ri-arrow-right-down-line"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Custom WordPress themes, plugins, and full website solutions with content management capabilities.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-divider"></div>
+
+                        <div class="accordion-item fade-up-anime">
+                            <div class="accordion-header">
+                                <span class="service-name">SEO & Performance Optimization</span>
+                                <span class="accordion-arrow"><i class="ri-arrow-right-down-line"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Search engine optimization and website performance optimization to improve visibility and user experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Skills Section -->
+                <section class="skills-section" id="skills">
+                    <!-- Skills Badge -->
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>SKILLS</span>
+                    </div>
+
+                    <!-- Main Title -->
+                    <div class="skills-title text-anime">
+                        <h2 class="skills-title-main"><span>My </span> <span class="color">Superpowers</span></h2>
+                    </div>
+
+                    <!-- Skills Grid -->
+                    <div class="skills-grid mt-64 row">
+                        <!-- First Row -->
+                        <div class="skill-card-wrapper col-md-4 col-6 col-lg-3 fade-up-anime">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <img src="img/figma.png" alt="Figma">
+                                </div>
+                                <span class="skill-percentage">92%</span>
+                            </div>
+                            <span class="skill-name">Figma</span>
+                        </div>
+
+                        <div class="skill-card-wrapper col-md-4 col-6 col-lg-3 fade-up-anime">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <!-- Framer SVG will be placed here -->
+                                    <img src="img/framer.png" alt="Framer">
+                                </div>
+                                <span class="skill-percentage">85%</span>
+                            </div>
+                            <span class="skill-name">Framer</span>
+                        </div>
+
+                        <div class="skill-card-wrapper col-md-4 col-6 col-lg-3 fade-up-anime">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <!-- Laravel SVG will be placed here -->
+                                    <img src="img/laravel.png" alt="Laravel">
+                                </div>
+                                <span class="skill-percentage">70%</span>
+                            </div>
+                            <span class="skill-name">Laravel</span>
+                        </div>
+
+                        <div class="skill-card-wrapper col-md-4 col-6 col-lg-3 fade-up-anime">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <!-- WordPress SVG will be placed here -->
+                                    <img src="img/wordpress.png" alt="WordPress">
+                                </div>
+                                <span class="skill-percentage">95%</span>
+                            </div>
+                            <span class="skill-name">WordPress</span>
+                        </div>
+
+                        <div class="skill-card-wrapper col-md-4 col-6 col-lg-3 fade-up-anime">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <!-- Sass SVG will be placed here -->
+                                    <img src="img/sass.png" alt="Sass">
+                                </div>
+                                <span class="skill-percentage">80%</span>
+                            </div>
+                            <span class="skill-name">Sass</span>
+                        </div>
+
+                        <div class="skill-card-wrapper col-md-4 col-6 col-lg-3 fade-up-anime">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <!-- React SVG will be placed here -->
+                                    <img src="img/react.png" alt="React">
+                                </div>
+                                <span class="skill-percentage">88%</span>
+                            </div>
+                            <span class="skill-name">React</span>
+                        </div>
+
+                        <div class="skill-card-wrapper col-md-4 col-6 col-lg-3 fade-up-anime">
+                            <div class="skill-card glass-filter">
+                                <div class="skill-icon">
+                                    <!-- GraphQL SVG will be placed here -->
+                                    <img src="img/graphql.png" alt="GraphQL">
+                                </div>
+                                <span class="skill-percentage">75%</span>
+                            </div>
+                            <span class="skill-name">GraphQL</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="portfolio" id="portfolio">
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>PROJECTS</span>
+                    </div>
+                    <h2 class="text-anime"><span>Projects Where Creativity </span><br><span class="color">Meets Strategy</span></h2>
+
+                    <div class="projects-wrap row g-5 mt-32">
+                        <!-- project-->
+                        <div class="project col-md-12 fade-up-anime">
+                            <div data-lightbox="pro" class="lightbox">
+                                <img decoding="async" src="img/project-01.jpg" data-mfp-src="img/project-01.jpg" alt="Single Image">
+                            </div>
+                            <span class="mt-16 project-name">Glød Branding</span>
+                        </div>
+                        <!-- project-->
+                        <div class="project col-md-6 fade-up-anime">
+                            <div data-lightbox="pro" class="lightbox">
+                                <img decoding="async" src="img/project-02.jpg" data-mfp-src="img/project-02.jpg" alt="Single Image">
+                            </div>
+                            <span class="mt-16 project-name">Jasper Jeon</span>
+                        </div>
+                        <!-- project-->
+                        <div class="project col-md-6 fade-up-anime">
+                            <div data-lightbox="pro" class="lightbox">
+                                <img decoding="async" src="img/project-03.jpg" data-mfp-src="img/project-03.jpg" alt="Single Image">
+                            </div>
+                            <span class="mt-16 project-name">Hafh</span>
+                        </div>
+                        <!-- project-->
+                        <div class="project col-md-12 fade-up-anime">
+                            <div data-lightbox="pro" class="lightbox">
+                                <img decoding="async" src="img/project-04.jpg" data-mfp-src="img/project-04.jpg" alt="Single Image">
+                            </div>
+                            <span class="mt-16 project-name">Sensum</span>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section class="comments" id="comments">
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>COMMENTS</span>
+                    </div>
+                    <h2 class="text-anime"><span>What the People Saying</span><br><span class="color">About Me</span></h2>
+                    <!-- Swiper -->
+                    <div class="swiper commentSlider mt-32 fade-up-anime">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="comment-box">
+                                    <p class="xs">“Sumit understands that shipping matters. He cuts through complexity, explains options clearly, and takes full responsibility for outcomes, not just tasks.”</p>
+                                    <span class="mt-32">Kevin Lawson</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="comment-box">
+                                    <p class="xs">“You always know where things stand with Sumit. No fluff, no over-engineering — just clear decisions, solid execution, and consistent results.”</p>
+                                    <span class="mt-32">Alex Turner</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="comment-box">
+                                    <p class="xs">“Sumit understands that shipping matters. He cuts through complexity, explains options clearly, and takes full responsibility for outcomes, not just tasks.”</p>
+                                    <span class="mt-32">Sarah Mitchell</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="comment-box">
+                                    <p class="xs">“With Sumit, there’s no hand-holding. He owns his work, communicates risks early, and delivers without excuses. Simple, professional, and effective.”</p>
+                                    <span class="mt-32">Laura Chen</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="comment-box">
+                                    <p class="xs">“Sumit works like someone who cares about the end result. Clear communication, firm decisions, and consistent delivery. Exactly what you want in a senior developer.”</p>
+                                    <span class="mt-32">Ethan Morris</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="comment-box">
+                                    <p class="xs">“Instead of asking endless questions, Sumit comes with answers. He understands the constraints, makes informed decisions, and takes full responsibility for the outcome.”</p>
+                                    <span class="mt-32">Sophie Reynolds</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="comment-box">
+                                    <p class="xs">“Sumit doesn’t overcomplicate problems to look smart. He makes practical decisions, explains them clearly, and delivers work that actually ships. That mindset is invaluable.”</p>
+                                    <span class="mt-32">Mark Stevens</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="comment-box">
+                                    <p class="xs">“We worked with several developers before, but Sumit stood out immediately. Reliable, disciplined, and extremely focused on outcomes. Once he commits to a deadline, he hits it.”</p>
+                                    <span class="mt-32">Oliver Grant</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row logos g-5 mt-64">
+                        <div class="col-md-3 logo fade-up-anime"><img src="img/logo-1.png" alt="client"></div>
+                        <div class="col-md-3 logo fade-up-anime"><img src="img/logo-5.png" alt="client"></div>
+                        <div class="col-md-3 logo fade-up-anime"><img src="img/logo-3.png" alt="client"></div>
+                        <div class="col-md-3 logo fade-up-anime"><img src="img/logo-4.png" alt="client"></div>
+                    </div>
+                </section>
+
+                <!-- Pricing Section -->
+                <section class="pricing" id="pricing">
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>PRICING</span>
+                    </div>
+                    <h2 class="text-anime"><span>Choose the Plan</span><br><span class="color">That's Right for You</span></h2>
+
+                    <div class="row g-5 mt-32">
+                        <div class="col-md-6">
+                            <div class="pricing-card">
+                                <div class="pricing-card-header">
+                                    <div class="left">
+                                        <span class="pricing-card-title">BASIC</span>
+                                        <p class="pricing-card-description">For projects with a clear brief and existing assets.</p>
+                                    </div>
+                                    <div class="right">
+                                        <span class="pricing-card-price">$45</span>
+                                        <span class="pricing-card-price-unit">/hour</span>
+                                    </div>
+                                </div>
+                                <div class="pricing-divider"></div>
+                                <ul>
+                                    <li>You already have design, UI, or references</li>
+                                    <li>Clean front-end implementation</li>
+                                    <li>Pixel-perfect build from provided files</li>
+                                    <li>Webflow, WordPress, or custom HTML/CSS</li>
+                                    <li>Responsive & performance-focused</li>
+                                    <li>Async communication</li>
+                                    <li>Weekday availability</li>
+                                    <li>3-month post-delivery support</li>
+                                </ul>
+                                <a class="visiblo-btn-color" href="#"><span>CHOOSE PLAN</span></a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="pricing-card">
+                                <div class="pricing-card-header">
+                                    <div class="left">
+                                        <span class="pricing-card-title">FULL SERVICE</span>
+                                        <p class="pricing-card-description">For clients who want the whole thing handled end-to-end.</p>
+                                    </div>
+                                    <div class="right">
+                                        <span class="pricing-card-price">$95</span>
+                                        <span class="pricing-card-price-unit">/hour</span>
+                                    </div>
+                                </div>
+                                <div class="pricing-divider"></div>
+                                <ul>
+                                    <li>UX planning & visual design included</li>
+                                    <li>High-end UI with modern animations</li>
+                                    <li>Webflow, WordPress, React, or Laravel stack</li>
+                                    <li>SEO & performance basics included</li>
+                                    <li>Priority scheduling</li>
+                                    <li>Weekend availability</li>
+                                    <li>12-month extended support</li>
+                                    <li>Long-term partner mindset</li>
+                                </ul>
+                                <a class="visiblo-btn-color" href="#"><span>CHOOSE PLAN</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Contact Section -->
+                <section class="contact-section" id="contact">
+                    <!-- Contact Badge -->
+                    <div class="eyebrow-badge fade-up-anime">
+                        <span>CONTACT</span>
+                    </div>
+
+                    <!-- Main Title -->
+                    <div class="contact-title">
+                        <h2><span>Any questions?</span><br><span class="color">I'm all ears.</span></h2>
+                    </div>
+
+                    <!-- Contact Info Cards -->
+                    <div class="contact-cards">
+                        <!-- Contact Details Card -->
+                        <div class="contact-card">
+                            <p class="xl text-anime">Contact Details</p>
+                            <div class="contact-info mt-16">
+                                <p class="contact-item text-anime">hello@SumitManandhar.com</p>
+                                <p class="contact-item text-anime">+49 493 39 29 23</p>
+                            </div>
+                        </div>
+
+                        <!-- Address Card -->
+                        <div class="contact-card">
+                            <p class="text-anime xl">Address</p>
+                            <div class="contact-info mt-16">
+                                <p class="contact-item text-anime">1245 Sunset Boulevard,</p>
+                                <p class="contact-item text-anime">Los Angeles, CA 90026</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="contact-form-wrapper ">
+                        <form class="contact-form" action="#" method="POST">
+                            <div class="form-row">
+                                <div class="form-group fade-up-anime">
+                                    <label for="name" class="form-label">NAME</label>
+                                    <input type="text" id="name" name="name" class="form-input" placeholder="Your Name" required>
+                                </div>
+
+                                <div class="form-group fade-up-anime">
+                                    <label for="email" class="form-label">EMAIL</label>
+                                    <input type="email" id="email" name="email" class="form-input" placeholder="Your Email" required>
+                                </div>
+                                <div class="form-group fade-up-anime">
+                                    <label for="website" class="form-label">WEBSITE (OPTIONAL)</label>
+                                    <input type="url" id="website" name="website" class="form-input" placeholder="Company Website">
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width fade-up-anime">
+                                <label for="message" class="form-label">MESSAGE</label>
+                                <textarea id="message" name="message" class="form-textarea" placeholder="Your Message" rows="5" required></textarea>
+                            </div>
+
+                            <div class="form-submit ">
+                                <button type="submit" class="visiblo-btn-color">Send It!</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="sidebar">
+                <div class="right-bar">
+                    <p class="xl">Menu</p>
+                    <ul class="mt-64">
+                        <li>
+                            <a href="#home">
+                                    <i class="ri-home-3-line"></i>
+                                    <span>Home</span>
+                                </a>
+                        </li>
+                        <li>
+                            <a href="#about">
+                                    <i class="ri-user-3-line"></i>
+                                    <span>About</span>
+                                </a>
+                        </li>
+                        <li>
+                            <a href="#resume">
+                                    <i class="ri-align-center"></i>
+                                    <span>Resume</span>
+                                </a>
+                        </li>
+                        <li>
+                            <a href="#services">
+                                    <i class="ri-briefcase-2-line"></i>
+                                      <span>Services</span>
+                                </a>
+                        </li>
+                        <li>
+                            <a href="#skills">
+                                    <i class="ri-shapes-line"></i>
+                                    <span>Skills</span>
+                                </a>
+                        </li>
+                        <li>
+                            <a href="#portfolio">
+                                    <i class="ri-macbook-line"></i>
+                                    <span>Projects</span>
+                                </a>
+                        </li>
+                        <li>
+                            <a href="#comments">
+                                    <i class="ri-message-2-line"></i>
+                                     <span>Testimonials</span>
+                                </a>
+                        </li>
+                        <li>
+                            <a href="#contact">
+                                    <i class="ri-mail-send-line"></i>
+                                    <span>Contact</span>
+                                </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat"><div class="hero-stat-num">4+</div><div class="hero-stat-label">Years Exp.</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">18+</div><div class="hero-stat-label">Projects</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label">Companies</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">BSc</div><div class="hero-stat-label">CS Degree</div></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- MARQUEE -->
-<div class="marquee-section">
-  <div class="marquee-track">
-    <div class="marquee-item"><span>◆</span> ASP.NET Core</div>
-    <div class="marquee-item"><span>◆</span> C# / .NET 8</div>
-    <div class="marquee-item"><span>◆</span> SQL Server</div>
-    <div class="marquee-item"><span>◆</span> Vue.js</div>
-    <div class="marquee-item"><span>◆</span> Entity Framework</div>
-    <div class="marquee-item"><span>◆</span> CI/CD Pipelines</div>
-    <div class="marquee-item"><span>◆</span> Azure DevOps</div>
-    <div class="marquee-item"><span>◆</span> jQuery</div>
-    <div class="marquee-item"><span>◆</span> REST APIs</div>
-    <div class="marquee-item"><span>◆</span> DNS Management</div>
-    <div class="marquee-item"><span>◆</span> IIS Deployment</div>
-    <div class="marquee-item"><span>◆</span> Query Optimization</div>
-    <div class="marquee-item"><span>◆</span> ASP.NET Core</div>
-    <div class="marquee-item"><span>◆</span> C# / .NET 8</div>
-    <div class="marquee-item"><span>◆</span> SQL Server</div>
-    <div class="marquee-item"><span>◆</span> Vue.js</div>
-    <div class="marquee-item"><span>◆</span> Entity Framework</div>
-    <div class="marquee-item"><span>◆</span> CI/CD Pipelines</div>
-    <div class="marquee-item"><span>◆</span> Azure DevOps</div>
-    <div class="marquee-item"><span>◆</span> jQuery</div>
-    <div class="marquee-item"><span>◆</span> REST APIs</div>
-    <div class="marquee-item"><span>◆</span> DNS Management</div>
-    <div class="marquee-item"><span>◆</span> IIS Deployment</div>
-    <div class="marquee-item"><span>◆</span> Query Optimization</div>
-  </div>
-</div>
-
-<!-- SKILLS -->
-<section class="skills-section fade-up">
-  <div class="section-label">What I Work With</div>
-  <h2 class="section-title">Skills &amp; Stack</h2>
-  <p class="section-sub">A full toolbox built over 4 years of shipping real products in production environments.</p>
-  <div class="skills-grid">
-    <div class="skill-card">
-      <div class="skill-card-icon">⚙️</div>
-      <div class="skill-card-title">Backend Development</div>
-      <div class="skill-tags">
-        <span class="skill-tag accent">ASP.NET Core</span>
-        <span class="skill-tag accent">C#</span>
-        <span class="skill-tag">.NET 6/8</span>
-        <span class="skill-tag">Web API</span>
-        <span class="skill-tag">SignalR</span>
-        <span class="skill-tag">MVC</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-card-icon">🗄️</div>
-      <div class="skill-card-title">Database</div>
-      <div class="skill-tags">
-        <span class="skill-tag accent">SQL Server</span>
-        <span class="skill-tag accent">Query Optimization</span>
-        <span class="skill-tag">Entity Framework</span>
-        <span class="skill-tag">Stored Procedures</span>
-        <span class="skill-tag">Indexing</span>
-        <span class="skill-tag">MySQL</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-card-icon">🎨</div>
-      <div class="skill-card-title">Frontend</div>
-      <div class="skill-tags">
-        <span class="skill-tag accent">Vue.js</span>
-        <span class="skill-tag">jQuery</span>
-        <span class="skill-tag">HTML/CSS</span>
-        <span class="skill-tag">Bootstrap</span>
-        <span class="skill-tag">JavaScript</span>
-        <span class="skill-tag">Razor Pages</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-card-icon">🚀</div>
-      <div class="skill-card-title">DevOps &amp; Deployment</div>
-      <div class="skill-tags">
-        <span class="skill-tag accent">CI/CD</span>
-        <span class="skill-tag accent">DNS Management</span>
-        <span class="skill-tag">Azure DevOps</span>
-        <span class="skill-tag">IIS</span>
-        <span class="skill-tag">GitHub Actions</span>
-        <span class="skill-tag">Linux Server</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects" class="fade-up">
-  <div class="section-label">What I've Built</div>
-  <h2 class="section-title">Featured Projects</h2>
-  <p class="section-sub">A selection of production systems, internal tools, and personal experiments.</p>
-  <div class="projects-grid">
-
-    <div class="project-card">
-      <div class="project-img proj-bg-1">
-        <div class="project-img-inner">🏥</div>
-        <div class="project-badge">Production</div>
-      </div>
-      <div class="project-body">
-        <div class="project-num">01 / 06</div>
-        <div class="project-title">MediTrack HMS</div>
-        <p class="project-desc">Comprehensive hospital management system handling patient records, appointment scheduling, billing, and pharmacy for a 200-bed facility.</p>
-        <div class="project-stack">
-          <span class="stack-pill">ASP.NET Core</span><span class="stack-pill">SQL Server</span><span class="stack-pill">jQuery</span><span class="stack-pill">Bootstrap</span>
+        <div class="video-wrapper" style="opacity:.3; left:0%;">
+            <video class="hero-video" autoplay muted loop playsinline>
+                <source src="video/jely.mp4" type="video/mp4">
+            </video>
         </div>
-        <a href="#" class="project-link">View Case Study →</a>
-      </div>
-    </div>
+    </main>
 
-    <div class="project-card">
-      <div class="project-img proj-bg-2">
-        <div class="project-img-inner">📦</div>
-        <div class="project-badge">Production</div>
-      </div>
-      <div class="project-body">
-        <div class="project-num">02 / 06</div>
-        <div class="project-title">StockFlow ERP</div>
-        <p class="project-desc">Multi-warehouse inventory and supply chain ERP with real-time stock tracking, purchase order workflows, and automated alerts via SignalR.</p>
-        <div class="project-stack">
-          <span class="stack-pill">C# .NET 7</span><span class="stack-pill">Vue.js</span><span class="stack-pill">Entity Framework</span><span class="stack-pill">SignalR</span>
-        </div>
-        <a href="#" class="project-link">View Case Study →</a>
-      </div>
-    </div>
+    <!-- SVG FILTER DEFINITION -->
 
-    <div class="project-card">
-      <div class="project-img proj-bg-3">
-        <div class="project-img-inner">💰</div>
-        <div class="project-badge">Production</div>
-      </div>
-      <div class="project-body">
-        <div class="project-num">03 / 06</div>
-        <div class="project-title">PayNow Finance Platform</div>
-        <p class="project-desc">Secure fintech platform for loan management and micro-credit services, integrating with national payment gateways and generating regulatory reports.</p>
-        <div class="project-stack">
-          <span class="stack-pill">ASP.NET Core Web API</span><span class="stack-pill">SQL Server</span><span class="stack-pill">Azure DevOps</span>
-        </div>
-        <a href="#" class="project-link">View Case Study →</a>
-      </div>
-    </div>
+    <!-- SVG Filter for Glass Distortion -->
 
-    <div class="project-card">
-      <div class="project-img proj-bg-4">
-        <div class="project-img-inner">🏫</div>
-        <div class="project-badge">Live</div>
-      </div>
-      <div class="project-body">
-        <div class="project-num">04 / 06</div>
-        <div class="project-title">EduPortal LMS</div>
-        <p class="project-desc">Learning management system for schools with student portals, assignment submission, exam scheduling, attendance tracking, and parent dashboards.</p>
-        <div class="project-stack">
-          <span class="stack-pill">ASP.NET MVC</span><span class="stack-pill">Vue.js</span><span class="stack-pill">jQuery</span><span class="stack-pill">MySQL</span>
-        </div>
-        <a href="#" class="project-link">View Case Study →</a>
-      </div>
-    </div>
-
-    <div class="project-card">
-      <div class="project-img proj-bg-5">
-        <div class="project-img-inner">📊</div>
-        <div class="project-badge">Internal Tool</div>
-      </div>
-      <div class="project-body">
-        <div class="project-num">05 / 06</div>
-        <div class="project-title">Pulse Analytics Dashboard</div>
-        <p class="project-desc">Real-time BI dashboard aggregating data from 5+ sources. Cut report generation from 4 hours to under 2 minutes through aggressive SQL optimization.</p>
-        <div class="project-stack">
-          <span class="stack-pill">C# .NET 8</span><span class="stack-pill">SQL Optimization</span><span class="stack-pill">Vue.js</span><span class="stack-pill">Chart.js</span>
-        </div>
-        <a href="#" class="project-link">View Case Study →</a>
-      </div>
-    </div>
-
-    <div class="project-card">
-      <div class="project-img proj-bg-6">
-        <div class="project-img-inner">🔗</div>
-        <div class="project-badge">API</div>
-      </div>
-      <div class="project-body">
-        <div class="project-num">06 / 06</div>
-        <div class="project-title">CoreAPI Gateway</div>
-        <p class="project-desc">Centralized API gateway handling auth, rate-limiting, and routing for a microservices architecture serving 10k+ daily active users.</p>
-        <div class="project-stack">
-          <span class="stack-pill">ASP.NET Core</span><span class="stack-pill">JWT Auth</span><span class="stack-pill">Redis</span><span class="stack-pill">CI/CD</span>
-        </div>
-        <a href="#" class="project-link">View Case Study →</a>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- EXPERIENCE -->
-<section class="exp-section fade-up" id="experience">
-  <div class="section-label">Where I've Worked</div>
-  <h2 class="section-title">Experience</h2>
-  <p class="section-sub">Four years across two companies, progressing from junior to senior developer.</p>
-  <div class="timeline">
-    <div class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-period">Jan 2023 — Present · 2 yrs+</div>
-      <div class="timeline-role">Senior Software Developer</div>
-      <div class="timeline-company">Hexabit Technologies Pvt. Ltd. — Kathmandu</div>
-      <ul class="timeline-desc">
-        <li>Lead developer for 3 flagship enterprise products (HMS, ERP, Finance platform)</li>
-        <li>Set up Azure DevOps CI/CD pipelines reducing deployment time by 60%</li>
-        <li>Optimized critical SQL Server queries, cutting report load time from hours to seconds</li>
-        <li>Manage DNS records, SSL certificates, and IIS configurations for 5+ live domains</li>
-        <li>Mentoring 2 junior developers and conducting weekly code reviews</li>
-      </ul>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-period">Jun 2021 — Dec 2022 · 1.5 yrs</div>
-      <div class="timeline-role">Junior .NET Developer</div>
-      <div class="timeline-company">Innovate Nepal Software — Lalitpur</div>
-      <ul class="timeline-desc">
-        <li>Built and maintained ASP.NET MVC modules for a school management system</li>
-        <li>Developed jQuery-heavy frontend components for interactive data tables and dashboards</li>
-        <li>Wrote stored procedures and optimized indexes on SQL Server databases</li>
-        <li>Assisted in deploying applications to live servers via IIS</li>
-      </ul>
-    </div>
-  </div>
-  <div style="margin-top:3rem">
-    <div class="section-label">Education</div>
-    <div class="edu-card">
-      <div class="edu-icon">🎓</div>
-      <div>
-        <div class="edu-degree">Bachelor of Science in Computer Science &amp; IT</div>
-        <div class="edu-school">Tribhuvan University — Kathmandu, Nepal</div>
-        <div class="edu-year">Graduated 2021</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="contact-section fade-up" id="contact">
-  <div class="section-label">Get In Touch</div>
-  <h2 class="section-title">Let's Work Together</h2>
-  <div class="contact-inner">
-    <form class="contact-form" onsubmit="handleSubmit(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-input" placeholder="Your name" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-input" placeholder="your@email.com" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Subject</label>
-        <input type="text" class="form-input" placeholder="What's this about?" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Message</label>
-        <textarea class="form-textarea" placeholder="Tell me about your project..."></textarea>
-      </div>
-      <button type="submit" class="form-submit" id="submitBtn">Send Message →</button>
-    </form>
-    <div class="contact-info">
-      <p class="contact-info-title">"Open to freelance projects, full-time opportunities, and interesting technical conversations."</p>
-      <div class="contact-links">
-        <a href="mailto:sumit.manandhar100@gmail.com" class="contact-link">
-          <span class="contact-link-icon">✉️</span>
-          <div><span class="contact-link-label">Email</span>sumit.manandhar100@gmail.com</div>
-        </a>
-        <a href="https://np.linkedin.com/in/sumit-mdr" target="_blank" class="contact-link">
-          <span class="contact-link-icon">💼</span>
-          <div><span class="contact-link-label">LinkedIn</span>linkedin.com/in/sumit-mdr</div>
-        </a>
-        <a href="https://github.com/sumit-manandhar" target="_blank" class="contact-link">
-          <span class="contact-link-icon">🐙</span>
-          <div><span class="contact-link-label">GitHub</span>github.com/sumit-manandhar</div>
-        </a>
-        <a href="tel:+977-9800000000" class="contact-link">
-          <span class="contact-link-icon">📞</span>
-          <div><span class="contact-link-label">Phone / WhatsApp</span>+977-9860122235</div>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div>© 2025 <span>Sumit Manandhar</span>. All rights reserved.</div>
-  <div>Designed &amp; Built with ❤️ in <span>Kathmandu 🇳🇵</span></div>
-</footer>
-
-<script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
-  });
-  (function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
-    requestAnimationFrame(animateRing);
-  })();
-
-  // Intersection observer for fade-ups
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-  // Stagger cards
-  document.querySelectorAll('.skill-card, .project-card, .timeline-item').forEach((el, i) => {
-    el.style.transitionDelay = `${i * 0.07}s`;
-  });
-
-  // Form
-  function handleSubmit(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    btn.textContent = 'Message Sent ✓';
-    btn.style.background = '#00c87a';
-    setTimeout(() => { btn.textContent = 'Send Message →'; btn.style.background = ''; }, 3000);
-  }
-</script>
+    <svg>
+        <defs>
+            <filter id="refractionFilter"> 
+                <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="10" result="turbulence"/> 
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="170"/> 
+            </filter>
+        </defs>
+    </svg>
+    <!-- JavaScript files -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/swiper.js"></script>
+    <script src="js/magnific.js"></script>
+    <script src="js/split-text.min.js"></script>
+    <script src="js/gsap.min.js"></script>
+    <script src="js/scroll-trigger.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
+
 </html>
